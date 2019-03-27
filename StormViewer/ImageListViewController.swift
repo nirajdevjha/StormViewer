@@ -13,6 +13,9 @@ class ImageListViewController: UITableViewController {
     
     var pictures = [String]()
 
+    
+     // MARK:- Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -52,7 +55,6 @@ extension ImageListViewController {
         if let vc = storyboard?.instantiateViewController(withIdentifier: "Detail") as? DetailViewController {
             vc.selectedImage = pictures[indexPath.row]
             navigationController?.pushViewController(vc, animated: true)
-            
         }
     }
 }

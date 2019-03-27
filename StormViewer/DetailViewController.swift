@@ -13,12 +13,18 @@ class DetailViewController: UIViewController {
     @IBOutlet weak var imageView: UIImageView!
     var selectedImage: String?
     
+    
+    // MARK:- Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         title = selectedImage
         navigationItem.largeTitleDisplayMode = .never
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareTapped))
 
+        
         if let imageToLoad = selectedImage {
             imageView.image = UIImage(named: imageToLoad)
         }
@@ -34,6 +40,21 @@ class DetailViewController: UIViewController {
         navigationController?.hidesBarsOnTap = false
     }
     
+    // MARK:- Private
+
+    @objc func shareTapped() {
+        
+        guard let image = imageView.image?.jpegData(compressionQuality: 0.7) else {
+            print("No image found")
+            return
+        }
+
+        let activityVC = UIActivityViewController(activityItems: [image], applicationActivities: [])
+
+        //On iPhone, activity view controllers automatically take up the full screen, but on iPad they appear as a popover that allows the user to see what they were working on below. This line of code tells iOS to anchor the activity view controller to the right bar button item (our share button), but this only has an effect on iPad – on iPhone it's ignored.
+        activityVC.popoverPresentationController?.barButtonItem = navigationItem.rightBarButtonItem
+        present(activityVC, animated: true, completion: nil)
+    }
 
     /*
     // MARK: - Navigation
