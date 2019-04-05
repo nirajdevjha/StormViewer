@@ -22,18 +22,24 @@ class ImageListViewController: UITableViewController {
         title = "Storm Viewer"
         navigationController?.navigationBar.prefersLargeTitles = true
         
-        let fileManager = FileManager.default
-        let path = Bundle.main.resourcePath!
-        let items = try! fileManager.contentsOfDirectory(atPath: path)
-        
-        for item in items {
-            if item.hasPrefix("nssl") {
-                // this is a picture to load..
-                pictures.append(item)
+        DispatchQueue.global(qos: .background).async { [weak self] in
+            let fileManager = FileManager.default
+            let path = Bundle.main.resourcePath!
+            let items = try! fileManager.contentsOfDirectory(atPath: path)
+            
+            for item in items {
+                if item.hasPrefix("nssl") {
+                    // this is a picture to load..
+                    DispatchQueue.main.async { [weak self] in
+                        self?.pictures.append(item)
+                        self?.tableView.reloadData()
+                    }
+                   
+                }
             }
         }
-        print(pictures)
     }
+        
     
 }
 
